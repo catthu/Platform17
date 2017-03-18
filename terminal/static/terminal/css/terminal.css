@@ -1,0 +1,31 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+#console {
+  font-family: Courier;
+  background-color: black;
+  color: #99ff00;
+  display:block; 
+  float:left;
+  width: 100vw;
+  height: 86vh;
+  overflow: scroll;
+  padding: 7vh;
+  position: fixed;
+}
+
+#console-old {
+    width: 50%;
+}
+
+#input-text {
+  font-family: Courier;
+  background-color: black;
+  color: #99ff00;
+  outline: none;
+  border: none;
+  font-size: 16px;
+}
