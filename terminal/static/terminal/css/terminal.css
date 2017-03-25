@@ -4,7 +4,8 @@ html, body {
   height: 100%;
 }
 
-#console {
+
+#terminal {
   font-family: Courier;
   background-color: black;
   color: #99ff00;
@@ -17,7 +18,7 @@ html, body {
   position: fixed;
 }
 
-#console-old {
+#terminal-output {
     width: 50%;
 }
 
@@ -29,3 +30,32 @@ html, body {
   border: none;
   font-size: 16px;
 }
+
+
+/*
+#terminal {
+  font-family: Courier;
+  background-color: white;
+  color: black;
+  display:block; 
+  float:left;
+  width: 100vw;
+  height: 86vh;
+  overflow: scroll;
+  padding: 7vh;
+  position: fixed;
+}
+
+#terminal-output {
+    width: 50%;
+}
+
+#input-text {
+  font-family: Courier;
+  background-color: white;
+  color: black;
+  outline: none;
+  border: none;
+  font-size: 16px;
+}
+*/

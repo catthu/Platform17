@@ -1,5 +1,75 @@
 # Platform 17 Development Progress
 
+## March 22, 2017
+
+### Overview
+
+- Thought about two preliminary base mechanics
+    - Player item creation
+    - Skill cards
+- Probably not the most urgent thing to do at the moment, but good to have an idea before building the infrastructure for it
+
+### Player Item Creation
+
+#### Goals
+
+- Flexible with a low learning curve
+- Leverage the ease of creation of a text-based system
+- Inspiration: Scribblenauts, Minecraft
+
+#### Implementation
+
+##### Level System
+
+Options I considered for a level system:
+
+- No level, everyone has equal mechanical ability to create powerful items
+- Point-buy system, items can have abilities and features up to a certain number of point-buy for the level
+- Descriptor system, items can have a up to a number of descriptors for the level, where each descriptor grants some benefits or special ability to the item
+
+##### Item Creation
+
+- Each item is created with: a noun, any number of descriptors, and an optional material component
+- **Noun:** the noun puts the item in the basic class of objects. This can be done by the player mannually tagging the item as an object of an existing class, or an automatic tagging system
+- **Descriptors:** descriptors modify the item in meaningful way. There can be many types of descriptors, e.g. color, size, material. Effects can range from reactions of certain NPCs who like or dislike it, to environment-changing abilities. The effects of the descriptors may not be apparent, and may be figured out by observing existing objects. Still, the only requirement for creating an object with a certain effects is putting the right descriptor in its name (deliberately or accidentally)
+- **Material component:** when fused with the object, it gives the object very special abilities. E.g fusing a mask with a sword may make the sword invisible and can only be seen by its creator. The effect of fusion may not be apparent
+
+### Skill Cards
+
+This is a system I created and used for a one-shot Christmas Special with my FATE tabletop group. It was surprisingly popular, fun and complex. 
+
+#### Goals
+
+- A lot of emergent complexity, but with a good learning curve (not very many options in the beginning, availability of options are introduced slowly so as not to be overwhelming)
+- Limited ability for long-time players to hurt new players
+- Limited rewards for 1 vs. 1, encourage tactical teamwork play
+- Inspiration: Etrian Odyssey, deck building games
+
+#### Implementation
+
+- There are many skill cards in game
+    - Skill cards can be related to combat abilities (e.g hit harder, hit with elements)
+    - Or can be related status (e.g more hitpoint, faster initiative)
+    - Or can be related to battlefield control and tactics (e.g status effects, buffs and debuffs...)
+    - Or can be a utility (e.g. unlock doors)
+    - [Example of combat cards, from that tabletop game](https://docs.google.com/document/d/1NmjNnMpAYCgTNuovuN1POb5IOu9MqszoCt30blWr5qA/edit)
+- Each player start with 10HP, and this number almost never changes
+- Each player has 5 active card slots
+- Each kind of attack does 1 damage
+    - This number can be changed during combat, but never by more than 1
+    - So in effect, an attack during combat can deal 0-2 damage
+- On each player's turn, they take one action
+- There are elements that interact with each other: water > fire > earth > lightning > water
+- I may also implement a simple spatial system to encourage more tactics, although I haven't thought about how yet
+- Many (most?) cards interact with "teammates" rather than self
+- Turn order determined by an initiative roll (players can have card that increases their initiative, but this takes one card slot)
+- Later on, can also use a class system
+
+#### Effects
+
+- With 10HP and the ability to deal 0-2 damage each turn, and limited card synergy with self, 1v1 is hopefully not as interesting or deadly (any player can escape if they want)
+- But team vs. team (e.g 4v4) can be interesting
+
 ## March 18, 2017
 
 ### Overview
@@ -11,8 +81,9 @@
 When a command is inputed, the command dispatcher would pass it through several command layers in the following order
 - Top-level commands: the non-overridable commands of the system (e.g HELP, QUIT, REPORT...)
 - Room-level commands: commands understood by the room the user is in. This could be the typical command set for a normal room, or a special room, or a scripted room --- depending on the room
+- Item-level commands: all the items are checked in a specific matching order to see if any of the items supports the command
 - Global commands: commands that are generally applicable regardless of where the user is, e.g. LOOK, SMILE, GIVE object TO person
-- Item-level commands: if none of the above layers yields a match for the command, all the items are checked in a specific matching order to see if any of the items supports the command
+
 
 ### The Item Layer
 
@@ -33,10 +104,14 @@ Two approaches I'm thinking:
 
 ### To Do Next
 
+- Check (in order): promises, generators, async/await, lodash
+- And closure (not as urgent)
 - Make input text field bigger
 - Create a dedicated channel for text output instead of console.log()
 - Implement the command dispatcher on the front end
+- Implement Django authentication
 - Design the API for the terminal
+- Look up server pushing to client and race conditions
 
 
 ## March 17, 2017
