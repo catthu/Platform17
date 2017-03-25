@@ -1,4 +1,4 @@
-// TODO: new channel for terminal output (stop using console.log())
+// Write shared event listener function (so it can print the command back to the terminal)
 // TODO: show past inputs
 // TODO: support printToTerminal()
 // TODO: support 
@@ -13,9 +13,13 @@
 // Keep focus on the input field
 
 // Define global variables
-var current_room = 3;
-var pending_input_request_from_room = false;
-var pending_input_request_from_item = false;
+var current_room_id = 3;
+var room_awaiting_input = false;
+var item_awaiting_input = false;
+var deferreds = [];
+//import login from '/rooms/login.js';
+//var room_js = login;
+
 
 $(document).ready( function() {
         // After page load, focus on input field
@@ -28,17 +32,42 @@ $(document).ready( function() {
 
         // Event listener for input submission
         // and pass the submission to the command dispatcher
-        form = document.getElementById("input-form");
+        var form = document.getElementById("input-form");
         form.onsubmit = function(e) {
             e.preventDefault();
             input = document.getElementById("input-text").value;
-            dispatchCommand(input);            
+            input = input.toLowerCase();
+            printToTerminal("> " + input + "<br />");
+            form.reset();
+            if (deferreds.length > 0) {
+                deferreds.pop().resolve(input);
+            } else {
+                dispatchCommand(input); 
+            }         
     
         };
+        
 });
 
+// make promise
+// resolve promise
+// await promise
+// .then the async function
+
+async function stdin(input, check = x => {return true;}, retry_msg = "Invalid. Try again.") {
+    while (!check(await input)) {
+        if (input !== null) {
+            printToTerminal(retry_msg);
+        }
+        input = new Promise((resolve, reject) => {
+            deferreds.push({resolve: resolve, reject: reject});
+        });
+    }
+    return input;
+}
+
 function dispatchCommand(input) {
-    var input_request_queue = [parseTopLayer, current_room.parseRoomLayer, parseGlobalLayer, parseItemLayer]; // the ordered queue for command layers
+    var input_request_queue = [parseTopLayer, login.parseRoomLayer, parseItemLayer, parseGlobalLayer]; // the ordered queue for command layers
     for (var i = 0; i < input_request_queue.length; i ++) {
         if (input_request_queue[i](input)) {
             // do stuff
@@ -47,14 +76,9 @@ function dispatchCommand(input) {
     }
 }
 
-// function get input
-// found command
-// do stuff
-// return
-
 function parseTopLayer(input) {
     // do stuff
-    return true;
+    return false;
 }
 
 function parseGlobalLayer(input) {
@@ -62,24 +86,37 @@ function parseGlobalLayer(input) {
     return true;
 }
 
+function parseItemLayer(input) {
+    return false;
+}
+
 // Print stuff to console
 
-function printToTerminal(string) {
+function ScrollToBottom() {
+            $("html, body, #terminal").animate({ scrollTop: $(document).height()}, "slow");
+            return false;
+};
+
+function printToTerminal(text) {
+    var output = $("#terminal-output");
+    output.append('<br />' + text + '<br />');
+    $("#input-text").focus();
+    ScrollToBottom();
 
 }
 
 // Function to support making AJAX calls to get the next room
-
+/*
 function getRoom(room_id) {
     var xhttp = new XMLHttpRequest();
     
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             res = JSON.parse(xhttp.response);
-            console.log(res.response_text);
+            printToTerminal(res.response_text);
         }
     };
-    url = "/search/?room=" + query;
+    url = "/" + query;
     xhttp.open("GET", url, true);
     xhttp.send();
 
@@ -91,34 +128,9 @@ function getRoom(room_id) {
     // Not have a bunch of scripts attached to the file
 }
 
+// Get the JS file of the next room
 
+function getJS(room_id) {
+    return null;
+}*/
 
-/*
-if (typeof console  != "undefined") 
-    if (typeof console.log != 'undefined')
-        console.olog = console.log;
-    else
-        console.olog = function() {};
-
-var result = $('#terminal');
-
-console.log = function(message) {
-    console.olog(message);
-    $('#terminal-output').append('<br />' + message + '<br />');
-      result.focus();
-    placeCaretAtEnd( document.getElementById("terminal") );
-};
-console.error = console.debug = console.info =  console.log
-
-function ScrollToBottom() {
-            $("html, body, #terminal").animate({ scrollTop: $(document).height()}, "slow");
-            return false;
-};
-
-function placeCaretAtEnd(el) {
-    var cursor = $('#input-text');
-    cursor.val('');
-    cursor.focus();
-    ScrollToBottom();
-}
-*/

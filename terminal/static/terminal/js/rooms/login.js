@@ -1,10 +1,20 @@
 var login = {
-
-    parseRoomLayer: function(input) {
+    parseRoomLayer : function(input) {
         // Implement step counter to avoid callback hell
 
         // NEW branch:
 
+        if (input === 'new') {
+            stdin(null, input => {return input == 'ok'; }).then(i => {console.log(i);});
+        /*
+            room_awaiting_input = true;
+            printToTerminal("OK. What username do you want?");
+
+            var username = stdin(null, command => {return (['catthu', 'jade'].indexOf(command) !== -1);});
+            printToTerminal("Choose " + username + "?");*/
+        }
+
+    /*
         printToTerminal("OK. What username do you want?");
 
         // And password?
@@ -35,9 +45,8 @@ var login = {
     // SIGN IN branch:
     // OK. What's your username?
     // And password?
-    // Welcome back, brave warrior! (or first name)
+    // Welcome back, brave warrior! (or first name)*/
 
     }
 }
-
 
