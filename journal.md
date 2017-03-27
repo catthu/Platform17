@@ -1,5 +1,55 @@
 # Platform 17 Development Progress
 
+## March 27, 2017
+
+### Overivew
+
+Lots of things happened! I've been occupied with a few urgent personal things and haven't had time to work on much at all, but I made some progress here and there in the last few days.
+
+I completed these TODOs and took notes on some of them:
+
+- Studied promises, generators, async/await; was told I still needed to look at lodash and closure
+    - Used them in my code!
+- Studied the fetch API
+    - Used this too
+- Made input text field bigger
+- Created a dedicated div for text output
+    - It's a div element, id 'terminal-output'
+- Debugged scrolling issue
+    - I wanted 'scrollHeight' instead of 'height'
+    - There are also generally issues where I confused or didn't pay much attention to which were applicable in jQuery vs Javascript
+- Implemented the command dispatcher, completely! (kinda)
+- Changed function names to more friendly names
+    - readLine, writeLine, etc. instead of the harder-to-guess getInput and printToTerminal
+- Designed and implemented the API for the terminal (sort of)
+    - writeLine(string): print a line to the end of the terminal
+    - readLine(string, function = () => {return true}, retry_msg = "Invalid. Try again."): read an input and if the input doesn't satisfy the conditions checked by the function, then print the retry_msg an wait for the input again
+        - I actually don't like this implementation of the retry_msg. An input could fail to satisfy the conditions of the requirement in several ways, so the check function should produce the retry_msg
+    - readLineAndResponse(string): generally called by the form on submit event. Takes the input, pass it to the command dispatcher to give to things that requested the input, in order
+- Loaded room js dynamically and load it into current_room variable
+    - Debugged current_room_script in loadRoom()
+        - This turned out to be a parallelism issue. The loadRoom() function made a call to the server, get the link to the room script, append it to 'head' in the HTML file, and then assign current_room_script to the new global variable loaded from that script
+        - But due to parallelism (or lack of, I think?), the new script wasn't loaded until the function finished executed
+        - So I added an event listener (script.onload) to do this variable assignment once the script has finished loading
+- Displayed past inputs
+    - Incorporated into writeLine()
+
+### Singleplayer vs. Multiplayer
+
+I've been thinking about whether to work toward multiplayer right away, or just with singleplayer and support multiplayer later. Due to potential database design issues I'm seeing with shared vs. private spaces in the game and user authentication, it seems to make sense to support multiplayers right off the bat. Plus I'm sure it will be a great learning experience.
+
+### To Do Next
+- Comment my code, functions, and may as well ES6-fy it (I was told there is an ES6 to ES5 translator)
+- Redo how readLine() works
+- Pre-load 'normalroom', check if a room uses 'normalroom', and connect it 
+- Implement readPassword() method to not show password on the screen
+- Write server call functions for authentication stuff (check existing usernames, send pairs of username and password to authenticate...)
+- Debug concurrency issues with setTimeout in login.js
+- Implement Django authentication
+- Look up server pushing to client and race conditions
+- Write Bertrand Russell Markov generator
+
+
 ## March 22, 2017
 
 ### Overview
