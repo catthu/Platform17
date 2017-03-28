@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse, Http404
 from django.core import serializers
 
+
 from generics.models import *
 
 # Create your views here.

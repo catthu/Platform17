@@ -1,5 +1,63 @@
 # Platform 17 Development Progress
 
+## March 28, 2017
+
+### Overview
+
+- Further fleshed out the terminal interface (I think it's fairly complete now)
+- Made input fields with password masking
+- Refactored different functions into their own apps (with exceptions)
+- Did something with static files serving
+- Looked into user authentication
+- Verb functions, and potentially verb objects
+- Wrote a bunch of check functions for the login room
+
+### Terminal Interface
+
+- Changed readLine(): it now takes 2 optinal arguments (input = null, check = () => {return true;})
+    - The check function is changed to return not a boolean value but an object of two properties:
+        - is_valid: whether the input is valid
+        - retry_msg: the retry message to print if the input is not valid. This is because an input can fail in different ways
+- Implemented delayedWriteLine(): takes an optional argument (delay). Write something to the terimnal after a delay
+
+### Password Masking
+
+- This was just more concurrency issue -- the function readPassword() has to turn the input field into a password field, get blocked on readLine(), and then turn it back to text afterward
+
+### Refactored Functions and Apps
+
+- In the interest of making modular apps, I assigned functions to the .js files they should be. Right now the only apps are terminal and generics 
+- The terminal app now has the document.read() stuff in it, and also a loadRoom() function, which is not directly related to the terminal. I'm thinking the URL dispatcher should direct "/" to somewhere else, and have that place import the terminal app. A 'game' app?
+
+### Static files
+
+- As I'm working with apps in the same projects that interact with each other, I'm trying to figure out how to serve static files. Somehow the STATIC_URL thing is not working, at the moment I have to just prepend /static to my file linking
+- STATICFILES_DIR does seem to be working though
+
+### User Authentication
+
+- I set up most things related to user authentication, except for the important part of actually transmitting the data
+- It seems industry standard is server-side hashing
+- I have yet to figure out how to enforce HTTPS connection, but I have some leads
+- Also how to transfer authorization token safely? Somehow very basic information on this is surprisingly hard to find. Gotta ask Taymon 
+
+### Verb Functions
+
+Verbs are like commands (LOOK, TAKE, etc.)
+
+- At the moment, I've decided that all verb functions are implemented with their function names being "verb_", followed by the verb
+- All basic verbs are one word, and the object can check the verb with its code to decide whether it supports the whole query
+- I'm thinking maybe I'll have to have a "verb" object as the superclass for all verbs. This object should support being asked whether it understands an entire command ("STAB MONSTER WITH SWORD")
+
+### To Do Next
+
+- Finish server call functions for authentication stuff (check existing usernames, send pairs of username and password to authenticate...)
+- Enforce HTTPS redirect
+- Maybe debug staticfiles serving
+- Implement Django authentication
+- Look up server pushing to client and race conditions
+- Write Bertrand Russell Markov generator
+
 ## March 27, 2017
 
 ### Overivew

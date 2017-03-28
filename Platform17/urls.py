@@ -19,4 +19,8 @@ from django.contrib import admin
 urlpatterns = [
     url(r'^', include('terminal.urls')),
     url(r'^admin/', admin.site.urls),
+    url(r'^auth/', include('players.urls')),
 ]
+
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+urlpatterns += staticfiles_urlpatterns()
