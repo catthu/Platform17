@@ -42,27 +42,39 @@ var login = {
 
         async function checkExistingUsername(username) {
             if (!username.match(/^\w+$/)) {
-                return {'is_valid': false, 'retry_msg': "Letters, numbers and _ only. Try again, without anything funky."};
+                return {
+                    'is_valid': false,
+                    'retry_msg': "Letters, numbers and _ only. Try again, without anything funky."
+                };
             }
             const url = "auth/checkusername/" + username + "/";
             let res = await fetch(url);
             res = await res.json();
             if (res.username_exists) {
-                return {'is_valid': false, 'retry_msg': "You have a popular username, or you're just forgetful about having signed up. Eitherway, this username already exists. Try again."};
+                return {
+                    'is_valid': false,
+                    'retry_msg': "You have a popular username, or you're just forgetful about having signed up. Eitherway, this username already exists. Try again."
+                };
             }
             return {'is_valid': true};
         }
 
         function checkValidPassword(password) {
             if (password.length < 6) {
-                return {'is_valid': false, 'retry_msg': "It may be hard to remember anything too long, but password must be more than 6 characters."};
+                return {
+                    'is_valid': false,
+                    'retry_msg': "It may be hard to remember anything too long, but password must be more than 6 characters."
+                };
             }
             return {'is_valid': true};
         }
 
         function checkValidEmail(email) {
             if (!email.match(/^\w+@\w+\.\w/)) {
-                return {'is_valid': false, 'retry_msg': "That's not a valid email address. Now enter something real."};
+                return {
+                    'is_valid': false,
+                    'retry_msg': "That's not a valid email address. Now enter something real."
+                };
             }
             return {'is_valid': true};
         }
