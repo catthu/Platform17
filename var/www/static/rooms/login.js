@@ -36,12 +36,12 @@ var login = {
         await delayedWriteLine("Just kidding. I don't really want it.");
         await delayedWriteLine("Yet.");
 
-        //await createUser(username, pass1, email);
+        await createUser(username, pass1, email);
 
         await delayedWriteLine("Cool, you're all set. Welcome to Platform 17! Your train may be coming soon.");
 
         async function checkExistingUsername(username) {
-            if (!username.match(/^\w+$/)) {
+            if (!login.usernameMeetsRequirements(username)) {
                 return {
                     'is_valid': false,
                     'retry_msg': "Letters, numbers and _ only. Try again, without anything funky."
@@ -60,7 +60,7 @@ var login = {
         }
 
         function checkValidPassword(password) {
-            if (password.length < 6) {
+            if (!login.passwordMeetsRequirements(password)) {
                 return {
                     'is_valid': false,
                     'retry_msg': "It may be hard to remember anything too long, but password must be more than 6 characters."
@@ -79,25 +79,84 @@ var login = {
             return {'is_valid': true};
         }
 
-        // TODO: look up how to transfer user sign up / sign in information over http
-        function createUser(username, password, email = null) {
-            /*const url = "auth/createuser/";
+        async function createUser(username, password, email = null) {
+            const url = "auth/createuser/";
+            const data = JSON.stringify({
+                username,
+                password,
+                email
+            })
             const init = {
                 method: 'POST',
-                headers: {
-                    "Authorization": , // only for when authenticating?
-                }
+                body: data
             }
-            let res = await fetch(url);*/
+            let res = await fetch(url, init);
         }
     },
 
     verb_sign: async () => {
 
         // SIGN IN branch:
-        // OK. What's your username?
-        // And password?
-        // Welcome back, brave warrior! (or first name)
+        let username = null;
+        let password = null;
+        while (username === null || !(await authenticate(username, password))) {
+            writeLine("OK. What's your username?");
+            username = await readLine(null);
+
+            writeLine("And password?");
+            password = await readPassword(null);
+
+        }
+
+        //Welcome back, brave warrior! (or first name)
+
+        async function authenticate(username, password) {
+            if (!login.usernameMeetsRequirements(username) || !login.passwordMeetsRequirements(password)) {
+                writeLine("Did you get that right?");
+                writeLine("Usernames can only contain letters, numbers or _");
+                writeLine("And password has to be more than 6 characters.")
+                writeLine("Once more, now.");
+                return false;
+            } else {
+                const url = 'auth/signin/'
+                const data = JSON.stringify({
+                    username,
+                    password
+                })
+                const init = {
+                    method: 'POST',
+                    body: data
+                }
+                let res = await fetch(url, init);
+                if (res.status == 401) {
+                    writeLine("That doesn't seem right. Try again.");
+                    return false;
+                } else {
+                    writeLine("Welcome back!");
+                    user_data = await res.json();
+                    console.log(user_data.id);  
+                    return true;                  
+                }
+            }
+        }
+    },
+
+    verb_guest: async () => {
+        return null;
+    },
+
+    usernameMeetsRequirements: (username) => {
+        if (!username.match(/^\w+$/)) {
+            return false;
+        }
+        return true;
+    },
+
+    passwordMeetsRequirements: (password) => {
+        if (password.length < 6) {
+            return false;
+        }
+        return true;
     }
 }
 
