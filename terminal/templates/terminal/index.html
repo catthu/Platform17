@@ -3,7 +3,8 @@
 <head>
     <title>Platform 17</title>
 
-    <LINK REL=StyleSheet HREF="/static/terminal/css/terminal.css" TYPE="text/css" MEDIA=screen>
+    {% static load %}
+    <LINK REL=StyleSheet HREF="{% static "/terminal/css/terminal.css" %}" TYPE="text/css" MEDIA=screen>
     
     <script src="https://www.google.com/jsapi" type="text/javascript"></script>
     <script type="text/javascript">google.load("jquery", "1.3.2");</script>
