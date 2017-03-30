@@ -24,7 +24,7 @@ PROJECT_ROOT = dirname(abspath(__file__))
 SECRET_KEY = "$xke49y)rr=7%xvuis%*^q69bjll4h8m4!1ql4i_18(3ja(e#("
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 # Application definition
 
