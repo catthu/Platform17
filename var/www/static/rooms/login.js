@@ -1,10 +1,7 @@
 var login = {
 
-    parseRoomLayer : (input) => {
-        // only do this most of the time
-        // but sometimes may want special behaviors
-        // define those here
-        return doVerb(input, login);
+    parseInput : (input) => {
+        return doVerb(input, login, true, "Err. NEW or SIGN IN only. Try again.");
     },
 
     verb_new: async () => {
@@ -34,11 +31,11 @@ var login = {
         
         writeLine("What's your bank account number?");
         await delayedWriteLine("Just kidding. I don't really want it.");
-        await delayedWriteLine("Yet.");
-
-        await createUser(username, pass1, email);
+        await delayedWriteLine("Yet.", 500);
 
         await delayedWriteLine("Cool, you're all set. Welcome to Platform 17! Your train may be coming soon.");
+
+        createUser(username, pass1, email);
 
         async function checkExistingUsername(username) {
             if (!login.usernameMeetsRequirements(username)) {
@@ -88,9 +85,12 @@ var login = {
             })
             const init = {
                 method: 'POST',
+                credentials: 'include',
                 body: data
             }
             let res = await fetch(url, init);
+            loadRoom('chargen');
+            return true;
         }
     },
 
@@ -108,7 +108,8 @@ var login = {
 
         }
 
-        //Welcome back, brave warrior! (or first name)
+        loadRoom('platform17');
+        return true;
 
         async function authenticate(username, password) {
             if (!login.usernameMeetsRequirements(username) || !login.passwordMeetsRequirements(password)) {
@@ -125,6 +126,7 @@ var login = {
                 })
                 const init = {
                     method: 'POST',
+                    credentials: 'include',
                     body: data
                 }
                 let res = await fetch(url, init);
@@ -133,17 +135,18 @@ var login = {
                     return false;
                 } else {
                     writeLine("Welcome back!");
-                    user_data = await res.json();
-                    console.log(user_data.id);  
+                    player_data = await res.json();
+                    me['first_name'] = player_data.first_name;
+                    me['last_name'] = player_data.last_name;
                     return true;                  
                 }
             }
         }
     },
 
-    verb_guest: async () => {
+    /*verb_guest: async () => {
         return null;
-    },
+    },*/
 
     usernameMeetsRequirements: (username) => {
         if (!username.match(/^\w+$/)) {

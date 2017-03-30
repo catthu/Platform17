@@ -1,7 +1,7 @@
 // This is the room-layer command dispatcher for rooms
-
 var normalroom = {
-    parseRoomLayer: function(input) {
+    
+    parseInput: (input) => {
         return null;
     }
 }

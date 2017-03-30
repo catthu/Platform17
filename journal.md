@@ -1,5 +1,56 @@
 # Platform 17 Development Progress
 
+## March 30, 2017
+
+### Overview
+
+Not much time due to shenanigans, but I managed to work on a few things.
+
+- Finished basic user creation and authentication
+- Enforced HTTPS redirect
+- Implemented some basic global commands (LOOK, SAY, MEOW (super important command))
+- Implemented some special room commands
+- Wrote chargen room, implemented character creation
+
+### User Creation and Authentication
+
+- For people with basically no knowledge about the authentication process like me ("Session? What's a session?"), there is a surprisingly lack of introductory materials. There are many things that deal with specific issues ("How to access session data on the client?"), but what I really needed was a super basic overview of all the components, best practices and just generally what to consider. In this I was much more reluctant to improvise than in other tasks, since it's security related. Really just a check list like "hash your password server-side, use SSL connection, pass credentials: 'includes' in your data" would have really helped
+- The front-end now keeps a global "me" object, to store the user information that the client needs to access. I know everyone loves to hate on global variables, but they exist and there are good cases for using them!
+- I will probably write my own basic guide for this after catching up with code comments and documentation
+
+### Enforced HTTPS Redirect
+
+- I learned that the manage.py runserver process doesn't allow HTTPS connection. This was rather non-obvious and not really documented anywhere, so it took much longer to debug than it should be. On production, there's a setting variable I could set to True. For now, heroku took care of the SSL certificate
+
+### Commands Dispatching and Responses
+
+- Some of the special-rooms modified the global commands (like SAY), and did so by first calling them. At some point I realized that this was like inheritance. Am I writing an object-oriented framework from scratch...?
+- Speaking of object-oriented, how do the front-end JS and back-end Python interact with each other when dealing with the same objects...?  
+
+### Chargen
+
+- Characters (players) are tied to user accounts right now, in a one-to-one fashion. But the field is just a foreign key to allow players to have more characters later
+- From an engine standpoint, I may need a more generic chargen room object
+
+### To Do Next
+
+- Separate production and dev environments / branches
+- Automatically log user out when browswer is closed
+- Log users in at their last location
+- Make login its own separate view and url in url dispatcher
+- Set @login_require's redirect to a custom re-authentication view
+- Redirect to login view after logout
+- Standardize input and output processing, design which steps in the process they get trimmed, formatted. Maybe make dialogues its own getting-ready function. Refactor this section of the code
+- Move functions around into appropriate apps with proper separation
+- Catch up on function commands and in-line documentation (much JS to comment on )
+- Write basic guide for user authentication and sessions
+- Figure out how to design the object-oriented-ness of items, how to store them, and how they interact back- and front-end
+- Preload the normal room script, put it in the command dispatcher queue
+- Maybe debug staticfiles serving
+- Look up server pushing to client and race conditions
+- Think about this more from an engine standpoint: how to divide code and allow for a lot of customization?
+- Write Bertrand Russell Markov generator
+
 ## March 28, 2017
 
 ### Overview

@@ -1,13 +1,23 @@
-// TODO: pre-load normalroom, check if a room uses it
-// TODO: read about user authentication
-// TODO: checkLogin() to check username and password at same time
-// TODO: Finish server call functions for authentication stuff (check existing usernames, send pairs of username and password to authenticate...)
-// TODO: Enforce HTTPS redirect
+// TODO: pre-load normalroom, check if a room uses it, put in dispatcher queue
+// DONE: read about user authentication
+// DONE: checkLogin() to check username and password at same time
+// DONE: Finish server call functions for authentication stuff (check existing usernames, send pairs of username and password to authenticate...)
+// DONE: Enforce HTTPS redirect
+// TODO: production and dev env (different git branches?) - ssl redirect, debug false, saving users
 // TODO: Maybe debug staticfiles serving
-// TODO: Implement Django authentication
+// DONE: Implement Django authentication
 // TODO: Look up server pushing to client and race conditions
 // TODO: Write Bertrand Russell Markov generator
-
+// TODO: Write text cleaning functions for terminal and refactor them
+// etc. capitalize, process...
+// TODO: standardize text and input trimming --- trim them at the event listener
+// instead of doVerb + trim them before passing to any functions
+// TODO: add to logout view: redirect to login view
+// TODO: set login_require's login_url to login view too
+// TODO: check authentication when user loads for the first time and put them
+// where they were last or an intro screen (probaby require separate login view)
+// TODO: automatically log out when user closes browswer? Log back in at their last location?
+// TODO: figure out how to design the object-oriented-ness of items, how to store them, and how they interact back- and front-end
 
 // Need to also:
 // Load top command layer (does not change, load at ready)
@@ -20,6 +30,7 @@
 var deferreds = [];
 var current_room;
 var current_room_script;
+var me = {};
 
 $(document).ready( function() {
         // After page load, focus on input field
@@ -30,7 +41,7 @@ $(document).ready( function() {
             $("#input-text").focus(); 
         });
 
-        loadRoom("login");
+        current_room_script = login;
 
         // Event listener for input submission
         // and pass the submission to the command dispatcher
@@ -123,7 +134,7 @@ function readLineAndRespond(input) {
         deferreds.pop().resolve(input);
     } else {
         // Go through request queue
-        let input_request_queue = [parseTopLayer, current_room_script.parseRoomLayer, parseItemLayer, parseGlobalLayer]; // the ordered queue for command layers
+        let input_request_queue = [top_commands.parseInput, current_room_script.parseInput, parseItemLayer, global_commands.parseInput]; // the ordered queue for command layers
         for (var i = 0; i < input_request_queue.length; i ++) {
             if (input_request_queue[i](input)) {
                 // do stuff
@@ -133,21 +144,27 @@ function readLineAndRespond(input) {
     }
 }
 
-function parseTopLayer(input) {
-    // do stuff
-    return null;
-}
-
-function parseGlobalLayer(input) {
-    // do stuff
-    return true;
-}
 
 function parseItemLayer(input) {
     return null;
 }
 
 // Print stuff to terminal
+
+function capitalize(text) {
+    text = text.trim();
+    return text.charAt(0).toUpperCase() + text.slice(1);
+
+}
+
+function processOutputText(text) {
+    let punctuation = ['.', '!', '?', '"', '>']
+    text = capitalize(text);
+    if (punctuation.indexOf(text.charAt(text.length - 1)) === -1) {
+        text = text + '.';
+    }
+    return text
+}
 
 function writeLine(text) {
     /*
@@ -159,6 +176,7 @@ function writeLine(text) {
         None
     */
     let output = $("#terminal-output");
+    text = processOutputText(text);
     output.append('<br />' + text + '<br />');
     $("#input-text").focus();
     // Scroll to bottom
@@ -186,7 +204,10 @@ async function loadRoom(room_codename) {
         true if successful
     */
     const url = "/" + room_codename + "/";
-    let res = await fetch(url);
+    const init = {credentials: 'include'}
+    let res = await fetch(url, init);
+    console.log(res);
+
     current_room = await res.json();
 
     let script = document.createElement('script');
@@ -196,6 +217,13 @@ async function loadRoom(room_codename) {
     script.onload = (() => {
         current_room_script = window[current_room.js_filename];
     });
+
+    await delayedWriteLine("<span class = 'room-name'>----- " + current_room.name + " -----</span>");
+    writeLine(current_room.description);
+
+    if (current_room.opening_script) {
+        writeLine(current_room.opening_script);
+    }
 
     return true;
 }

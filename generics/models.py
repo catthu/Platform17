@@ -9,8 +9,8 @@ DEFAULT_CHARACTER_LOCATION = 4 # Waiting Room (Chargen)
 class Room(models.Model):
     name = models.CharField(max_length = 200)
     code_name = models.CharField(max_length = 200, null = True, unique = True)
-    is_scripted = models.BooleanField(default = False)
-    description = models.CharField(max_length = 500, null = True)
+    opening_script = models.TextField(null = True, default = None)
+    description = models.TextField(null = True)
     indoor = models.BooleanField()
     # Name of file in the js directory, not including the .js extension
     js_filename = models.CharField(max_length = 64, default = 'normalroom')

@@ -12,17 +12,21 @@
  
     <script type = "text/javascript" src ="static/terminal/js/terminal.js"></script>
 
-    <script type = "text/javascript" src ="/static/generics/js/top_commands.js"></script>
+    <script type = "text/javascript" src ="/static/rooms/login.js"></script>
+
+    <script type = "text/javascript" src ="/static/verbs/js/top_commands.js"></script>
 
     <script type = "text/javascript" src ="/static/verbs/js/verbs.js"></script>
 
-    <script type = "text/javascript" src ="/static/generics/js/global_commands.js"></script>
+    <script type = "text/javascript" src ="/static/verbs/js/global_commands.js"></script>
+
+    <script type = "text/javascript" src ="/static/rooms/normalroom.js"></script>
 
 </head>
 <body>
     <div id="terminal" >
         <div id = "terminal-output">
-        {{ page.description|safe }}
+        {{ page.description | safe }}
       </div>
     
     <form method = "get" id = "input-form" autocomplete="off">
