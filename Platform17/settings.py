@@ -130,7 +130,7 @@ ALLOWED_HOSTS = ['*']
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
-STATIC_ROOT = normpath(join(PROJECT_ROOT, 'var/www/local/staticfiles'))
+STATIC_ROOT = normpath(join(BASE_DIR, 'var/www/local/staticfiles'))
 STATIC_URL = '/static/'
 
 # Extra places for collectstatic to find static files.
