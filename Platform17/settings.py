@@ -24,7 +24,7 @@ PROJECT_ROOT = dirname(abspath(__file__))
 SECRET_KEY = "$xke49y)rr=7%xvuis%*^q69bjll4h8m4!1ql4i_18(3ja(e#("
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 # Application definition
 
@@ -121,7 +121,7 @@ db_from_env = dj_database_url.config(conn_max_age=500)
 DATABASES['default'].update(db_from_env)
 
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
-SECURE_SSL_REDIRECT = True
+#SECURE_SSL_REDIRECT = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Allow all host headers
@@ -136,7 +136,6 @@ STATIC_URL = '/static/'
 # Extra places for collectstatic to find static files.
 
 STATICFILES_DIRS = (
-    normpath(join(BASE_DIR, 'static')),
     normpath(join(BASE_DIR, 'var/www/static')),
 )
 
