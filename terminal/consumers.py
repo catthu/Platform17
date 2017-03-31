@@ -2,7 +2,6 @@
 from channels.handler import AsgiHandler
 from channels import Group
 from channels.sessions import channel_session
-from .models import Room
 
 def ws_connect(message):
     # ASGI WebSocket packet-received and send-packet message types
