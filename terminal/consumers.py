@@ -4,6 +4,7 @@ from channels import Group
 from channels.sessions import channel_session
 
 def ws_connect(message):
+    message.reply_channel.send({"accept": True})
     Group('all-game').add(message.reply_channel)
 
 def ws_receive(message):
