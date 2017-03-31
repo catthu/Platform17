@@ -147,7 +147,6 @@ function readLineAndRespond(input) {
         None
 
     */
-    input = input.toLowerCase();
     let input_field = document.getElementById("input-text");
     // Record the most recent input in #terminal-output
     if (input_field.type === "password") {

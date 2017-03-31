@@ -21,7 +21,7 @@ function doVerb(input, obj, block = false, retry_msg = null) {
     } else {
         verb = input;
     }
-    if (shortcuts.hasOwnProperty(verb)) {
+    if (shortcuts.hasOwnProperty(verb.toLowerCase())) {
         verb = shortcuts[verb];
     }
     if (obj["verb_" + verb]) {
