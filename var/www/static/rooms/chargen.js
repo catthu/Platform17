@@ -18,6 +18,9 @@ var chargen = {
         me['first_name'] = first_name;
         me['last_name'] = last_name;
         current_room_script = normalroom;
+
+        chargen.openWebSocket();
+        
         return true;
 
         async function checkLastName(input) {
@@ -60,5 +63,11 @@ var chargen = {
             let res = await fetch(url, init)
             return true;
         }
+    },
+
+    openWebSocket: () => {
+        let script = document.createElement('script');
+        script.src = "/static/terminal/js/reconnecting-websocket.js";
+        document.body.appendChild(script);
     }
 }

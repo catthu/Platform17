@@ -109,6 +109,8 @@ var login = {
         }
 
         loadRoom('platform17');
+        login.openWebSocket();
+
         return true;
 
         async function authenticate(username, password) {
@@ -160,6 +162,12 @@ var login = {
             return false;
         }
         return true;
+    },
+
+    openWebSocket: () => {
+        let script = document.createElement('script');
+        script.src = "/static/terminal/js/reconnecting-websocket.js";
+        document.body.appendChild(script);
     }
 }
 
