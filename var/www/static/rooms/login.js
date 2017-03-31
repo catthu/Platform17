@@ -109,7 +109,7 @@ var login = {
         }
 
         loadRoom('platform17');
-        login.openWebSocket();
+        openWebSocket();
 
         return true;
 
@@ -164,10 +164,5 @@ var login = {
         return true;
     },
 
-    openWebSocket: () => {
-        let script = document.createElement('script');
-        script.src = "/static/terminal/js/reconnecting-websocket.js";
-        document.body.appendChild(script);
-    }
 }
 

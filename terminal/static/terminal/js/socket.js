@@ -1,5 +1,9 @@
 var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
-var socket = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/chat/");
+var socket;
+
+function openWebSocket() {
+    socket = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/chat/");
+}
 
 socket.onmessage = (message) => {
     let line = JSON.parse(message.data);
