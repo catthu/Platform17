@@ -1,5 +1,5 @@
 from channels.routing import route
-from terminal.consumers import ws_message
+from terminal.consumers import *
 
 channel_routing = [
     route("websocket.connect", ws_connect),
