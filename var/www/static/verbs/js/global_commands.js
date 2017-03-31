@@ -27,7 +27,6 @@ var global_commands = {
         }
 
         if (input.trim() === 'me') {
-            console.log('if');
             writeLine("You are " + me.first_name + " " + me.last_name + ".")
             return true;
         }
