@@ -1,11 +1,8 @@
+// TODO: weird bug! On heroku, if SECURE_SSL is required, then static files are not loading =[
+// but we can still https to it, just can't require...
 // TODO: pre-load normalroom, check if a room uses it, put in dispatcher queue
-// DONE: read about user authentication
-// DONE: checkLogin() to check username and password at same time
-// DONE: Finish server call functions for authentication stuff (check existing usernames, send pairs of username and password to authenticate...)
-// DONE: Enforce HTTPS redirect
 // TODO: production and dev env (different git branches?) - ssl redirect, debug false, saving users
 // TODO: Maybe debug staticfiles serving
-// DONE: Implement Django authentication
 // TODO: Look up server pushing to client and race conditions
 // TODO: Write Bertrand Russell Markov generator
 // TODO: Write text cleaning functions for terminal and refactor them
@@ -32,6 +29,36 @@ var current_room;
 var current_room_script;
 var me = {};
 
+var processText = {
+
+    capitalize: (text) => {
+        text = text.trim();
+        return text.charAt(0).toUpperCase() + text.slice(1);
+    },
+
+    capitalizeEveryWord: (text) => {
+        if (text.length === 0) {
+            return "";
+        }
+        text = processText.capitalize(text);
+        let space = text.indexOf(" ");
+        while (space !== -1) {
+            text = text.slice(0, space + 1) + (text.charAt(space + 1).toUpperCase()) + text.slice(space + 2);
+            space = text.indexOf(" ", space + 1);
+        }
+        return text;
+    },
+
+    prepareForWriteLine: (text) => {
+        let punctuation = ['.', '!', '?', '"', '>']
+        text = processText.capitalize(text);
+        if (punctuation.indexOf(text.charAt(text.length - 1)) === -1) {
+            text = text + '.';
+        }
+        return text
+    }
+};
+
 $(document).ready( function() {
         // After page load, focus on input field
         $("#input-text").focus()
@@ -49,7 +76,7 @@ $(document).ready( function() {
         form.onsubmit = function(e) {
             e.preventDefault();
             input = document.getElementById("input-text").value;
-            readLineAndRespond(input);         
+            readLineAndRespond(input.trim());         
     
         };
         
@@ -100,6 +127,7 @@ async function readPassword(input = null, check = x => {return {'is_valid': true
     return input;
 }
 
+
 function readLineAndRespond(input) {
     /*
     Called by the window event listener on the input form.
@@ -145,26 +173,13 @@ function readLineAndRespond(input) {
 }
 
 
+
+
 function parseItemLayer(input) {
     return null;
 }
 
 // Print stuff to terminal
-
-function capitalize(text) {
-    text = text.trim();
-    return text.charAt(0).toUpperCase() + text.slice(1);
-
-}
-
-function processOutputText(text) {
-    let punctuation = ['.', '!', '?', '"', '>']
-    text = capitalize(text);
-    if (punctuation.indexOf(text.charAt(text.length - 1)) === -1) {
-        text = text + '.';
-    }
-    return text
-}
 
 function writeLine(text) {
     /*
@@ -176,7 +191,7 @@ function writeLine(text) {
         None
     */
     let output = $("#terminal-output");
-    text = processOutputText(text);
+    text = processText.prepareForWriteLine(text);
     output.append('<br />' + text + '<br />');
     $("#input-text").focus();
     // Scroll to bottom
@@ -203,10 +218,9 @@ async function loadRoom(room_codename) {
     Return value:
         true if successful
     */
-    const url = "/" + room_codename + "/";
+    const url = "http://" + window.location.host + "/" + room_codename + "/";
     const init = {credentials: 'include'}
     let res = await fetch(url, init);
-    console.log(res);
 
     current_room = await res.json();
 

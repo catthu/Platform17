@@ -10,7 +10,6 @@ function getVerbs(obj) {
 
 function doVerb(input, obj, block = false, retry_msg = null) {
     // return falsy if can find things, truthy if can
-    input = input.trim();
     shortcuts = {
         "'": 'say',
         'l': 'look'
@@ -27,7 +26,7 @@ function doVerb(input, obj, block = false, retry_msg = null) {
     }
     if (obj["verb_" + verb]) {
         if (start !== -1) {
-            return obj["verb_" + verb](input.slice(start));
+            return obj["verb_" + verb](input.slice(start).trim());
         } else {
             return obj["verb_" + verb]();
         }

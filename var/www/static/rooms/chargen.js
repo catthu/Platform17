@@ -6,11 +6,11 @@ var chargen = {
 
     verb_say: async (input) => {
         await global_commands.verb_say(input);
-        let first_name = capitalize(input);
+        let first_name = processText.capitalize(input);
         writeLine("She scribbles your name on a notepad. <span class ='dialogue'>\"" + first_name + ", got it. And your last name?\"</span>");
         let last_name = await readLine(null, checkLastName);
         last_name = last_name.slice(last_name.indexOf(" "));
-        last_name = capitalize(last_name);
+        last_name = processText.capitalize(last_name);
         writeLine("She writes that down to. <span class ='dialogue'>\"Spleeendid.\"");
         await delayedWriteLine("The train pulls to a stop. While you were talking, The Interstellar Express has somehow boarded the space station and is now sitting at Platform 17. Fast, isn't it? ");
         await delayedWriteLine("Feel free to take a look around. When you're ready, EXIT.");

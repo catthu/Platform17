@@ -13,7 +13,7 @@ var global_commands = {
             writeLine("Say what?");
             return true;
         }
-        input = processOutputText(input);        
+        input = processText.prepareForWriteLine(input);        
         text = '"' + input + '"';
         writeLine("You say, <span class = 'dialogue'>" + text + "</span>")
         return true;

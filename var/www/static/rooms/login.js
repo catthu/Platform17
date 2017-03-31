@@ -77,7 +77,7 @@ var login = {
         }
 
         async function createUser(username, password, email = null) {
-            const url = "auth/createuser/";
+            const url = 'http://' + window.location.host + '/auth/createuser/';
             const data = JSON.stringify({
                 username,
                 password,
@@ -119,7 +119,7 @@ var login = {
                 writeLine("Once more, now.");
                 return false;
             } else {
-                const url = 'auth/signin/'
+                const url = 'http://' + window.location.host + '/auth/signin/';
                 const data = JSON.stringify({
                     username,
                     password
