@@ -3,15 +3,14 @@ var socket;
 
 function openWebSocket() {
     socket = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/chat/");
-}
-
-socket.onmessage = (message) => {
-    let line = JSON.parse(message.data);
-    if (line.message.indexOf(processText.capitalizeEveryWord(me['first_name'] + " " + me['last_name'])) === 0) {
-        return false;
+    socket.onmessage = (message) => {
+        let line = JSON.parse(message.data);
+        if (line.message.indexOf(processText.capitalizeEveryWord(me['first_name'] + " " + me['last_name'])) === 0) {
+            return false;
+        }
+        writeLine(line.message);
+        return true;
     }
-    writeLine(line.message);
-    return true;
 }
 
 function push(message) {
