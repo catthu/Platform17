@@ -218,7 +218,7 @@ async function loadRoom(room_codename) {
     Return value:
         true if successful
     */
-    const url = "http://" + window.location.host + "/" + room_codename + "/";
+    const url = "/" + room_codename + "/";
     const init = {credentials: 'include'}
     let res = await fetch(url, init);
 
