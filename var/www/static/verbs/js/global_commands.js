@@ -14,8 +14,10 @@ var global_commands = {
             return true;
         }
         input = processText.prepareForWriteLine(input);        
-        text = '"' + input + '"';
+        let text = '"' + input + '"';
         writeLine("You say, <span class = 'dialogue'>" + text + "</span>")
+        let push_msg = processText.capitalizeEveryWord(me['first_name'] + " " + me['last_name']) + " says, <span class = 'dialogue'>" + text + "</span>"
+        push(push_msg);
         return true;
     },
 
