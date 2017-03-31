@@ -157,3 +157,8 @@ CHANNEL_LAYERS = {
         "ROUTING": "terminal.routing.channel_routing",
     },
 }
+
+try:
+    from local_settings import *
+except ImportError as e:
+    pass
