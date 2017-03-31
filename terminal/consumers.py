@@ -10,6 +10,7 @@ def ws_connect(message):
 def ws_receive(message):
     # ASGI WebSocket packet-received and send-packet message types
     # both have a "text" key for their textual data.
+    
     Group('all-game').send({'text': message.content['text'],})
 
 
