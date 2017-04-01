@@ -243,7 +243,7 @@ async function loadRoom(room_codename) {
 
     // Close current socket
 
-    if (socket) {
+    if (socket && CURRENT_ROOM) {
         push(ME['first_name'] + " " + ME['last_name'] + " leaves.", CURRENT_ROOM.code_name)
         socket.close()
     }
