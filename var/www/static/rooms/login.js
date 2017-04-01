@@ -1,16 +1,25 @@
 var login = {
 
+    // Script for new users sign up and sign in
+
     parseInput : (input) => {
+        // Does not allow commands to propogate down to the lower layers
+        // At the moment, understands NEW and SIGN
+        // Will support GUEST later
         return doVerb(input, login, true, "Err. NEW or SIGN IN only. Try again.");
     },
 
     verb_new: async () => {
+
+        // Signing up new users
 
         writeLine("OK. What username do you want?");
         let username = await readLine(null, checkExistingUsername);
 
         let pass1 = null;
         let pass2 = "";
+
+        // Check that the two passwords are the same
 
         while (pass1 !== pass2) {
             if (pass1 !== null) {
@@ -22,6 +31,8 @@ var login = {
             writeLine("And password, again.");
             pass2 = await readPassword(null);
         }
+
+        // Get their email address
 
         writeLine("I know you're grumpy about checking emails, so I won't ask for an email address or anything.");
         await delayedWriteLine("If you lose your password, you'll just have to start everything over.");
@@ -35,9 +46,16 @@ var login = {
 
         await delayedWriteLine("Cool, you're all set. Welcome to Platform 17! Your train may be coming soon.");
 
+        // Create the User and associated Player
+
         createUser(username, pass1, email);
 
+        /////////////// Helper functions for NEW /////////////////
+
         async function checkExistingUsername(username) {
+            // readLine check function
+            // Check if username meets requirements or already exists
+            // Alphanumerics and underscores only
             if (!login.usernameMeetsRequirements(username)) {
                 return {
                     'is_valid': false,
@@ -57,6 +75,9 @@ var login = {
         }
 
         function checkValidPassword(password) {
+            // readLine check function
+            // Check if password meets requirements
+            // More than 6 characters
             if (!login.passwordMeetsRequirements(password)) {
                 return {
                     'is_valid': false,
@@ -67,6 +88,8 @@ var login = {
         }
 
         function checkValidEmail(email) {
+            // readLine check function 
+            // Check if email is a valid email according to regex
             if (!email.match(/^\w+@\w+\.\w/)) {
                 return {
                     'is_valid': false,
@@ -77,6 +100,8 @@ var login = {
         }
 
         async function createUser(username, password, email = null) {
+            // Create new user and associated player, store in db
+            // Then move user to Chargen
             const url = '/auth/createuser/';
             const data = JSON.stringify({
                 username,
@@ -96,9 +121,14 @@ var login = {
 
     verb_sign: async () => {
 
-        // SIGN IN branch:
+        // Signing in existing users
+
         let username = null;
         let password = null;
+
+        // Check if valid username and password
+        // until valid
+
         while (username === null || !(await authenticate(username, password))) {
             writeLine("OK. What's your username?");
             username = await readLine(null);
@@ -108,49 +138,73 @@ var login = {
 
         }
 
-        loadRoom('platform17');
-        openWebSocket();
-
         return true;
 
+        /////////////// Helper functions for SIGN /////////////////
+
         async function authenticate(username, password) {
+
+            // If username or password entered doesn't meet the signing up
+            // requirements, prompt user to try again
+
             if (!login.usernameMeetsRequirements(username) || !login.passwordMeetsRequirements(password)) {
                 writeLine("Did you get that right?");
                 writeLine("Usernames can only contain letters, numbers or _");
                 writeLine("And password has to be more than 6 characters.")
                 writeLine("Once more, now.");
                 return false;
-            } else {
-                const url = '/auth/signin/';
-                const data = JSON.stringify({
-                    username,
-                    password
-                })
-                const init = {
-                    method: 'POST',
-                    credentials: 'include',
-                    body: data
-                }
-                let res = await fetch(url, init);
-                if (res.status == 401) {
-                    writeLine("That doesn't seem right. Try again.");
-                    return false;
-                } else {
-                    writeLine("Welcome back!");
-                    player_data = await res.json();
-                    me['first_name'] = player_data.first_name;
-                    me['last_name'] = player_data.last_name;
-                    return true;                  
-                }
             }
+            
+            // If they do meet the requirement, check with server
+
+            const url = '/auth/signin/';
+            const data = JSON.stringify({
+                username,
+                password
+            })
+            const init = {
+                method: 'POST',
+                credentials: 'include',
+                body: data
+            }
+            let res = await fetch(url, init);
+
+            // If wrong username / password combination, prompt to try again
+
+            if (res.status == 401) {
+                writeLine("That doesn't seem right. Try again.");
+                return false;
+            }
+
+            // Else put them at their character's last location
+
+            writeLine("Welcome back!");
+            character_data = await res.json();
+
+            // If the user doesn't have any character (e.g. they logged out before
+            // having created a character), put them in chargen to create one
+
+            if (!character_data.hasCharacter) {
+                return loadRoom("chargen");
+            }
+
+            // Put character information in the global ME variable
+
+            ME['first_name'] = character_data.first_name;
+            ME['last_name'] = character_data.last_name;
+
+            // Move user to their last location
+            loadRoom(character_data.location);
+            return true;                  
+      
+        
         }
     },
 
-    /*verb_guest: async () => {
-        return null;
-    },*/
-
     usernameMeetsRequirements: (username) => {
+        // Returns true if username meets requirement
+        // false if it doesn't
+        // requirement is alphanumreic and underscores only
         if (!username.match(/^\w+$/)) {
             return false;
         }
@@ -158,6 +212,9 @@ var login = {
     },
 
     passwordMeetsRequirements: (password) => {
+        // Returns true if username meets requirement
+        // false if it doesn't
+        // requirement is 6 characters or more
         if (password.length < 6) {
             return false;
         }

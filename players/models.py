@@ -5,10 +5,12 @@ from django.contrib.auth.models import User
 from generics.models import *
 
 storage_user = User.objects.get(username__iexact = "storage")
-platform_room = Room.objects.get(code_name__iexact = "platform17")
 
 class Player(models.Model):
-    user = models.ForeignKey(User, on_delete = models.CASCADE, default = storage_user.id)
-    first_name = models.CharField(max_length = 16, default = None, null = True)
-    last_name = models.CharField(max_length = 16, default = None, null = True)
-    location = models.ForeignKey(Room, on_delete = models.SET_DEFAULT, default = platform_room.id)
+    user = models.OneToOneField(User, on_delete = models.CASCADE, default = storage_user.id, unique = True)
+
+# This is not kept track at generics.models.Character
+# so that generics is self-contained
+class PlayerToCharacters(models.Model):
+    player = models.OneToOneField(Player, on_delete = models.CASCADE, unique = True)
+    character = models.OneToOneField(Character, on_delete = models.CASCADE, unique = True)

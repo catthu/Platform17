@@ -24,14 +24,11 @@ PROJECT_ROOT = dirname(abspath(__file__))
 SECRET_KEY = "$xke49y)rr=7%xvuis%*^q69bjll4h8m4!1ql4i_18(3ja(e#("
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 # Application definition
 
 INSTALLED_APPS = [
-    'terminal.apps.TerminalConfig',
-    'generics.apps.GenericsConfig',
-    'players.apps.PlayersConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -43,6 +40,9 @@ INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'channels',
+    'terminal.apps.TerminalConfig',
+    'generics.apps.GenericsConfig',
+    'players.apps.PlayersConfig',
 ]
 
 MIDDLEWARE = [
@@ -158,7 +158,9 @@ CHANNEL_LAYERS = {
     },
 }
 
+
 try:
     from local_settings import *
 except ImportError as e:
     pass
+

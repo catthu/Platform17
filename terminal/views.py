@@ -16,11 +16,16 @@ def index(request):
 @login_required
 def room(request, room_codename):
     try:
-        page = Room.objects.get(code_name__iexact = room_codename)
+        room = Room.objects.get(code_name__iexact = room_codename)
     except Room.DoesNotExist:
         raise Http404('Room does not exist.')
     res = {}
-    for field in page._meta.get_fields():
-        if getattr(page, field.name, False):
-            res[field.name] = getattr(page, field.name)
+    for field in room._meta.get_fields():
+        if getattr(room, field.name, False):
+            if field.name == 'exit':
+                res['exit'] =  room.exit.code_name
+                continue
+            res[field.name] = getattr(room, field.name)
+    res['characters_here'] = map(lambda c: c.getFullName(), Character.objects.filter(location = room).filter(is_logged_in = True))
+    Character.objects.filter(id = request.session['character_id']).update(location = room)
     return JsonResponse(res)
