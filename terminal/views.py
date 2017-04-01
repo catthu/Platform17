@@ -39,6 +39,9 @@ def room(request, room_codename):
                 res['exit'] =  room.exit.code_name
                 continue
             res[field.name] = getattr(room, field.name)
-    res['characters_here'] = map(lambda c: c.getFullName(), Character.objects.filter(location = room).filter(is_logged_in = True).exclude(pk = request.session['character_id']))
-    Character.objects.filter(id = request.session['character_id']).update(location = room)
+    if 'character_id' in request.session.keys():
+        res['characters_here'] = map(lambda c: c.getFullName(), Character.objects.filter(location = room).filter(is_logged_in = True).exclude(pk = request.session['character_id']))
+        Character.objects.filter(id = request.session['character_id']).update(location = room)
+    else:
+        res['characters_here'] = map(lambda c: c.getFullName(), Character.objects.filter(location = room).filter(is_logged_in = True))
     return JsonResponse(res)

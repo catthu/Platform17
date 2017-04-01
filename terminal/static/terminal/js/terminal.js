@@ -286,8 +286,9 @@ async function loadRoom(room_codename) {
 
     // Open a new websocket with the URL with the codename of the new room
 
-
-    push(ME['first_name'] + " " + ME['last_name'] + " arrives.", room_codename)
+    if (room_codename !== "chargen") {
+        push(ME['first_name'] + " " + ME['last_name'] + " arrives.", room_codename)
+    }
 
     return true;
 }
