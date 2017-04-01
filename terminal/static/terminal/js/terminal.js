@@ -1,5 +1,6 @@
 // DONE: better structure and separate between the Player model and Character model
 // TODO: implement isMe() function to check if terminal push output or part of it refers to self (to prevent printing it)
+// TODO: debug lowercase or uppercase input thing (like NEW at log in currently not working)
 // TODO: ask username, emails, twice (verification) when signing up new users
 // TODO: weird bug! On heroku, if SECURE_SSL is required, then static files are not loading =[
 // but we can still https to it, just can't require...
