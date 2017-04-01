@@ -236,18 +236,19 @@ async function loadRoom(room_codename) {
     Return value:
         true if successful
     */
-    
-    if (socket) {
-        socket.close()
-    }
-
-    // Open a new websocket with the URL with the codename of the new room
-
-    openWebSocket(room_codename);
 
     const url = "/" + room_codename + "/";
     const init = {credentials: 'include'}
     let res = await fetch(url, init);
+
+    // Close current socket
+
+    if (socket) {
+        push(ME['first_name'] + " " + ME['last_name'] + " leaves.", CURRENT_ROOM.code_name)
+        socket.close()
+    }
+
+    openWebSocket(room_codename);
 
     // Load the new room information into the environment
 
@@ -282,6 +283,11 @@ async function loadRoom(room_codename) {
     playOpeningScript(CURRENT_ROOM.opening_script);
 
     writeCharactersList(CURRENT_ROOM.characters_here);    
+
+    // Open a new websocket with the URL with the codename of the new room
+
+
+    push(ME['first_name'] + " " + ME['last_name'] + " arrives.", room_codename)
 
     return true;
 }

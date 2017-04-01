@@ -4,9 +4,13 @@ from channels import Group
 from channels.sessions import channel_session
 
 def ws_connect(message):
+    # Accept connection
     message.reply_channel.send({"accept": True})
+    # Get room name from the path
     room = message['path'].strip('/')
+    # Add user to the right room
     Group(room).add(message.reply_channel)
+    # Add user to the all-game room
     Group('all-game').add(message.reply_channel)
 
 def ws_receive(message):

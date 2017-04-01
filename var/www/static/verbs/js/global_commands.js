@@ -47,7 +47,7 @@ var global_commands = {
         // If LOOK ME, print out character name
 
         if (input.trim() === 'me') {
-            writeLine("You are " + me.first_name + " " + me.last_name + ".")
+            writeLine("You are " + ME.first_name + " " + ME.last_name + ".")
             return true;
         }
     },
