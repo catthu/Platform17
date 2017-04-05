@@ -18,7 +18,7 @@ $ redis-server
 ```
 6. Start daphne:
 ```
-`daphne -b 0.0.0.0 -p 8000 myapp.asgi:channel_layer`
+`daphne -b 0.0.0.0 -p 8000 terminal.asgi:channel_layer`
 ```
 7. Start a worker:
 ```
