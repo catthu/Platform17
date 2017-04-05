@@ -1,5 +1,11 @@
 # Platform 17 Development Progress
 
+## April 5, 2017
+
+## Overview
+
+I've been occupied with packing and other work, but I updated README.md to reflect current status. 
+
 ## March 30, 2017
 
 ### Overview

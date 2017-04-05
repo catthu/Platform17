@@ -1,18 +1,52 @@
 # Platform 17
 
-Like text adventures, but more fun and modular. Will be both a platform and an engine.
+Work in progress. Text-based games engine and content.
 
-For detailed design and progress, check journal.md
+Detailed design and progress recorded in journal.md
+
+## Installation
+
+The project is nowhere near complete yet, but if you'd like to clone the project and run it on your local machine, follow these steps:
+
+1. Clone the repo
+2. Install dependencies as specified in `requirements.txt`
+3. Set up a PostgreSQL database, configure it in `settings.py`
+4. Import the current database with `dbexport.pgsql`
+5. Start the Redis server:
+```
+$ redis-server
+```
+6. Start daphne:
+```
+`daphne -b 0.0.0.0 -p 8000 myapp.asgi:channel_layer`
+```
+7. Start a worker:
+```
+`python manage.py runworker`
+```
+
+Enjoy!
+
+## Demo
+
+Alternatively, check the current state of the project out [here](platform17.herokuapp.com).
 
 ## Status
 
-- Working on the terminal interface (parser and room script)
+As of 4/5/2017, the app has:
 
-## Features In Plan
+- A user creation and authentication system (but no password retrieval yet, sorry)
+- Complete and working front-end terminal interface
+- Working ORM models for rooms and characters
+- Globally support SAY, LOOK (and LOOK ME), MEOW
+- Websocket intergration that pushes SAY commands to characters in the same room
 
-- Multiplayer browswer-based connection
-- Reference book and note pad
-- Quests and quest plugins system
+## In Progress
+
+- Basic item models and OOP design
+- Object matching
+- Anti-cheating security check
+- Better separation of apps, and of engine and contents
 
 ## License: MIT
 

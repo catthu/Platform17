@@ -1,16 +1,24 @@
+// Thoughts on security and security related issues:
+// Because the data is visible for the clients, they can send random functions
+// back and "cheat". Have to prevent this -- maybe implement a secuirty layer?
+// Take into account possible expected actions from any client (e.g a list of
+// objects it's legally allowed to interact with, and a list of actions)
+// and check that it's a legal operation
+// TODO: update readme.md
 // DONE: better structure and separate between the Player model and Character model
 // TODO: implement isMe() function to check if terminal push output or part of it refers to self (to prevent printing it)
+// TODO: regex for email address to account for . + etc
 // TODO: debug lowercase or uppercase input thing (like NEW at log in currently not working)
 // TODO: ask username, emails, twice (verification) when signing up new users
 // TODO: weird bug! On heroku, if SECURE_SSL is required, then static files are not loading =[
 // but we can still https to it, just can't require...
 // DONE: pre-load normalroom, check if a room uses it, put in dispatcher queue
 // TODO: Maybe debug staticfiles serving
-// TODO: Look up server pushing to client and race conditions
+// DONE: Look up server pushing to client and race conditions
 // TODO: Write Bertrand Russell Markov generator
-// TODO: Write text cleaning functions for terminal and refactor them
+// DONE: Write text cleaning functions for terminal and refactor them
 // etc. capitalize, process...
-// TODO: standardize text and input trimming --- trim them at the event listener
+// HALF: standardize text and input trimming --- trim them at the event listener
 // instead of doVerb + trim them before passing to any functions
 // TODO: add to logout view: redirect to login view
 // TODO: set login_require's login_url to login view too
@@ -23,14 +31,6 @@
 // TODO: implement optimistic locking where needed for race condition:
 // http://stackoverflow.com/questions/3653592/how-do-you-avoid-this-race-condition-in-python-django-mysql
 // and for database entries use get_for_updates(): http://stackoverflow.com/questions/320096/django-how-can-i-protect-against-concurrent-modification-of-database-entries
-
-
-
-// Need to also:
-// Load top command layer (does not change, load at ready)
-// Load room command layer (changes often, make AJAX calls)
-// Load global command layer (does not change, load at ready)
-// Load item layer (changes often, make AJAX calls)
 
 
 // Define global variables
