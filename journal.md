@@ -4,7 +4,12 @@
 
 ## Overview
 
-I've been occupied with packing and other work, but I updated README.md to reflect current status. 
+I've been occupied with packing and other work, so not much done here. But:
+
+- I updated README.md to reflect current status
+- And made a Bertrand Russell Markov chain bot
+    - The source is Russell's essays scraped from the web. I don't think this is good enough, so I'll have to acquire a text version of his Autobiography somehow
+    - I used markovify, but I want to come back and implement it from scratch to see what it's like
 
 ## March 30, 2017
 
